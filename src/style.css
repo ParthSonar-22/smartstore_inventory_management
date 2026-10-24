@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #0b1326;
+    overscroll-behavior-y: none;
+  }
+  body {
+    min-height: max(720px, 100dvh);
+    color: #dae2fd;
+  }
+  ::-webkit-scrollbar { display: none; }
+  * { -webkit-tap-highlight-color: transparent; }
+}
+
+@layer utilities {
+  .pb-safe  { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .pt-safe  { padding-top:    env(safe-area-inset-top,    0px); }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .pt-safe  { padding-top: env(safe-area-inset-top, 0px); }
+}
+
+/* Auth page gradient blobs */
+@keyframes blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(30px, -20px) scale(1.1); }
+  66%       { transform: translate(-20px, 20px) scale(0.9); }
+}
+.blob { animation: blob 7s infinite; }
+.blob-delay-2 { animation-delay: 2s; }
+.blob-delay-4 { animation-delay: 4s; }
+
+/* Smooth page transitions */
+.page { display: flex; flex-direction: column; }
+.page.hidden { display: none; }
+
+/* Tailwind's "hidden" utility fix for flex items */
+.hidden { display: none !important; }
+
+/* ═══ PRINT & INVOICE STYLES ═════════════════════════════════ */
+#invoice-printable-sheet {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+#invoice-printable-sheet * {
+  color: #111827;
+}
+#invoice-printable-sheet strong,
+#invoice-printable-sheet b,
+#invoice-printable-sheet th,
+#invoice-printable-sheet h1,
+#invoice-printable-sheet .text-black {
+  color: #000000 !important;
+}
+
+@media print {
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: auto !important;
+    min-height: auto !important;
+    font-size: 11pt !important;
+  }
+  #top-bar, nav, #auth-page, #main-app > header, #main-app > main, #main-app > nav,
+  #modal-overlay, #confirm-overlay, #loading-overlay, #toast, .no-print {
+    display: none !important;
+  }
+  #invoice-overlay {
+    position: static !important;
+    inset: auto !important;
+    background: transparent !important;
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+  #invoice-printable-sheet {
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  @page {
+    size: A4 portrait;
+    margin: 10mm 10mm 10mm 10mm;
+  }
+}

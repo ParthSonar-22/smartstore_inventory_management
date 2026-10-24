@@ -1,0 +1,4 @@
+smartstore_mobile
+*.apk
+node_modules
+.git

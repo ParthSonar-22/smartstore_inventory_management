@@ -1,0 +1,11 @@
+.vercel
+node_modules/
+dist/
+smartstore_mobile/build/
+smartstore_mobile/.dart_tool/
+smartstore_mobile/.flutter-plugins-dependencies
+smartstore_mobile/android/.gradle/
+smartstore_mobile/android/.kotlin/
+smartstore_mobile/android/local.properties
+smartstore_mobile/.idea/
+*.iml

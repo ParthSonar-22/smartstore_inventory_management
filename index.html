@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="SmartStore – Smart inventory and purchase manager for small shops.">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>SmartStore</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <!-- Material Symbols -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+
+  <!-- Vite entry -->
+  <script type="module" src="/src/app.js"></script>
+</head>
+<body class="bg-surface text-on-surface min-h-screen font-body-md text-body-md">
+
+  <!-- ═══ Auth Page (shown when logged out) ═══════════════════ -->
+  <div id="auth-page" class="hidden"></div>
+
+  <!-- ═══ Main App (shown when logged in) ════════════════════ -->
+  <div id="main-app" class="hidden flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header id="top-bar" class="fixed top-0 inset-x-0 z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_16px_rgba(0,0,0,0.35)]">
+      <div class="h-16 px-margin flex items-center justify-between gap-space-sm">
+        <div class="flex items-center gap-space-sm min-w-0">
+          <img id="app-logo" src="/logo.jpg" alt="SmartStore" class="h-8 w-8 rounded-xl object-cover flex-shrink-0">
+          <div class="flex flex-col min-w-0">
+            <div class="flex items-center gap-space-xs">
+              <span class="font-headline-sm text-headline-sm text-on-surface font-bold tracking-tight truncate">SmartStore</span>
+              <span class="font-label-metric text-label-metric bg-secondary-container text-on-secondary-container px-1.5 py-0.5 rounded-full uppercase tracking-wider font-semibold">Inventory</span>
+            </div>
+            <span class="font-body-sm text-body-sm text-on-surface-variant truncate" id="page-subtitle">Dashboard</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-space-xs flex-shrink-0">
+          <button class="relative w-10 h-10 flex items-center justify-center rounded-xl bg-surface-container-low text-on-surface-variant" type="button" onclick="navigate('dashboard')">
+            <span class="material-symbols-outlined text-[22px]">home</span>
+          </button>
+          <div id="user-avatar" class="w-10 h-10 flex items-center justify-center p-0.5 rounded-full bg-surface-container-low cursor-pointer" onclick="openUserProfileModal()" title="View Profile & Invoice Address">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary-container flex items-center justify-center">
+              <span class="material-symbols-outlined text-[18px] text-on-primary">person</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Pages -->
+    <main class="flex flex-col w-full pt-16 pb-24 min-h-screen">
+      <div id="page-dashboard" class="page w-full px-margin py-space-md flex flex-col gap-space-md"></div>
+      <div id="page-products"  class="page hidden w-full flex flex-col"></div>
+      <div id="page-suppliers" class="page hidden w-full px-margin py-space-md flex flex-col gap-space-md"></div>
+      <div id="page-pr"        class="page hidden w-full px-margin py-space-md flex flex-col gap-space-md"></div>
+      <div id="page-po"        class="page hidden w-full px-margin py-space-md flex flex-col gap-space-md"></div>
+      <div id="page-grn"       class="page hidden w-full px-margin py-space-md flex flex-col gap-space-md"></div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/85 backdrop-blur-xl shadow-[0_-4px_24px_rgba(0,0,0,0.45)]">
+      <div class="flex items-center justify-around h-16 px-space-xs">
+        <button class="nav-btn flex flex-col items-center justify-center min-w-[56px] h-12 transition-colors text-primary font-semibold" data-page="dashboard">
+          <span class="material-symbols-outlined text-[24px]">grid_view</span>
+          <span class="font-label-metric text-label-metric tracking-tight mt-0.5">Home</span>
+        </button>
+        <button class="nav-btn flex flex-col items-center justify-center min-w-[56px] h-12 transition-colors text-on-surface-variant" data-page="products">
+          <span class="material-symbols-outlined text-[24px]">inventory_2</span>
+          <span class="font-label-metric text-label-metric tracking-tight mt-0.5">Items</span>
+        </button>
+        <button class="nav-btn flex flex-col items-center justify-center min-w-[56px] h-12 transition-colors text-on-surface-variant" data-page="suppliers">
+          <span class="material-symbols-outlined text-[24px]">factory</span>
+          <span class="font-label-metric text-label-metric tracking-tight mt-0.5">Suppliers</span>
+        </button>
+        <button class="nav-btn flex flex-col items-center justify-center min-w-[56px] h-12 transition-colors text-on-surface-variant" data-page="pr">
+          <span class="material-symbols-outlined text-[24px]">assignment</span>
+          <span class="font-label-metric text-label-metric tracking-tight mt-0.5">Requests</span>
+        </button>
+        <button class="nav-btn flex flex-col items-center justify-center min-w-[56px] h-12 transition-colors text-on-surface-variant" data-page="po">
+          <span class="material-symbols-outlined text-[24px]">local_shipping</span>
+          <span class="font-label-metric text-label-metric tracking-tight mt-0.5">Orders</span>
+        </button>
+        <button class="nav-btn flex flex-col items-center justify-center min-w-[56px] h-12 transition-colors text-on-surface-variant" data-page="grn">
+          <span class="material-symbols-outlined text-[24px]">check_circle</span>
+          <span class="font-label-metric text-label-metric tracking-tight mt-0.5">Receive</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Universal Modal (bottom sheet) -->
+    <div id="modal-overlay" class="hidden fixed inset-0 bg-black/60 z-[400] flex items-end justify-center" role="dialog" aria-modal="true">
+      <div class="bg-surface-container-high border border-outline-variant w-full max-w-lg rounded-t-2xl p-5 pb-8 max-h-[92dvh] overflow-y-auto">
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold" id="modal-title">Form</h2>
+          <button id="modal-close" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors">
+            <span class="material-symbols-outlined text-[18px]">close</span>
+          </button>
+        </div>
+        <div id="modal-body"></div>
+        <div class="flex gap-3 mt-5">
+          <button id="modal-cancel" class="flex-1 py-3 rounded-xl bg-surface-container text-on-surface-variant font-headline-sm text-[14px] font-semibold hover:bg-surface-variant transition-colors">Cancel</button>
+          <button id="modal-save"   class="flex-1 py-3 rounded-xl bg-primary text-on-primary font-headline-sm text-[14px] font-bold shadow-lg shadow-primary/20 active:scale-95 transition-all">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Dialog -->
+    <div id="confirm-overlay" class="hidden fixed inset-0 bg-black/60 z-[600] flex items-center justify-center p-5">
+      <div class="bg-surface-container-high border border-outline-variant rounded-2xl p-6 w-full max-w-sm shadow-2xl">
+        <h3 class="font-headline-sm text-headline-sm font-bold mb-2" id="confirm-title">Are you sure?</h3>
+        <p class="font-body-md text-body-md text-on-surface-variant mb-5 leading-relaxed" id="confirm-text">This cannot be undone.</p>
+        <div class="flex gap-3">
+          <button id="confirm-cancel" class="flex-1 py-2.5 rounded-xl bg-surface-container text-on-surface-variant font-semibold">Cancel</button>
+          <button id="confirm-ok"     class="flex-1 py-2.5 rounded-xl bg-error text-white font-bold">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="hidden fixed inset-0 bg-black/50 z-[800] flex items-center justify-center" role="status">
+      <div class="w-12 h-12 rounded-full border-[3px] border-outline-variant border-t-primary animate-spin"></div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed z-[500] bottom-24 left-1/2 -translate-x-1/2 translate-y-4 opacity-0 pointer-events-none transition-all duration-300 whitespace-nowrap max-w-[90vw] text-center" role="status" aria-live="polite">
+      <span class="inline-block bg-surface-container-highest text-on-surface font-label-metric text-label-metric font-semibold px-4 py-2.5 rounded-full shadow-xl border border-outline-variant"></span>
+    </div>
+
+    <!-- ═══ Full Tax Invoice Modal / Viewer ═══════════════════ -->
+    <div id="invoice-overlay" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm z-[700] flex flex-col items-center justify-start overflow-y-auto p-2 sm:p-6" role="dialog" aria-modal="true">
+      <!-- Toolbar (hidden during print) -->
+      <div class="no-print w-full max-w-4xl flex items-center justify-between gap-3 bg-surface-container-high border border-outline-variant rounded-2xl p-3 sm:p-3.5 mb-4 shadow-2xl sticky top-2 z-50 flex-wrap">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div class="w-9 h-9 rounded-xl bg-primary/15 text-primary flex items-center justify-center flex-shrink-0">
+            <span class="material-symbols-outlined text-[22px]">receipt_long</span>
+          </div>
+          <div class="min-w-0">
+            <h3 class="font-headline-sm text-[14px] sm:text-[15px] font-bold text-on-surface truncate">GST Tax Invoice Report</h3>
+            <span class="font-label-metric text-[11px] text-on-surface-variant font-mono truncate block" id="invoice-bar-subtitle">OD336724498564863100</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap ml-auto">
+          <button id="invoice-edit-profile-btn" type="button" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container border border-outline-variant text-on-surface text-[12px] font-semibold hover:bg-surface-variant active:scale-95 transition-all" title="Edit your delivery / billing details for invoices">
+            <span class="material-symbols-outlined text-[16px] text-primary">edit_location_alt</span>
+            <span class="hidden sm:inline">Edit Recipient</span>
+          </button>
+          <button id="invoice-download-btn" type="button" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-on-primary font-label-metric text-[12px] font-bold shadow-md shadow-primary/25 hover:opacity-95 active:scale-95 transition-all" title="Download PDF to device">
+            <span class="material-symbols-outlined text-[17px]">download</span>
+            <span>Download PDF</span>
+          </button>
+          <button id="invoice-print-btn" type="button" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container border border-outline-variant text-on-surface text-[12px] font-semibold hover:bg-surface-variant active:scale-95 transition-all" title="Print Invoice">
+            <span class="material-symbols-outlined text-[17px]">print</span>
+            <span class="hidden sm:inline">Print</span>
+          </button>
+          <button id="invoice-close-btn" type="button" class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-surface-variant active:scale-95 transition-all" title="Close Invoice">
+            <span class="material-symbols-outlined text-[18px]">close</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Printable A4 Paper Invoice Sheet -->
+      <div id="invoice-printable-sheet" class="w-full max-w-4xl bg-white text-black p-5 sm:p-9 rounded-xl shadow-2xl font-sans text-[11.5px] leading-snug select-text mb-12">
+        <!-- Injected dynamically by renderInvoiceContent() -->
+      </div>
+    </div>
+
+  </div><!-- /main-app -->
+
+</body>
+</html>
